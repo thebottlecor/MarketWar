@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 0debeaf36b27445489126c48feefe14b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 429464676, guid: b705f5c8e624c114e9717396c49b7e61, type: 3}
+  m_Sprite: {fileID: 1476450135, guid: 4f0c68c56d73cc44d88d2ad50641a89b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -228,13 +228,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alliance: -1
-  maxHp: 10
-  currentHp: 0
+  currentAttackCooldown: 0
+  baseMaxHp: 20
+  baseDamage: 10
+  baseAttackSpeed: 1
+  baseSpeed: 3
+  maxHp: 20
+  damage: 10
+  speed: 3
+  attackSpeed: 1
+  predictDamage: 0
+  sprite: {fileID: 3551422064758889030}
+  attackedMaterial: {fileID: 2100000, guid: 6fe32559d16ad414e962ef6bec8ac3d6, type: 2}
   target: {fileID: 0}
   rg: {fileID: 7197703515684166326}
-  attackSpeed: 1
-  damage: 1
-  speed: 1
   attackEffectIdx: 1
 --- !u!58 &3710542498739315937
 CircleCollider2D:
@@ -270,7 +277,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.125
+  m_Radius: 0.25
 --- !u!50 &7197703515684166326
 Rigidbody2D:
   serializedVersion: 4

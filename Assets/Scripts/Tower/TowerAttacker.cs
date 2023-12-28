@@ -13,13 +13,11 @@ public class TowerAttacker : MonoBehaviour
     public int maxMissilePool = 1;
     public List<TowerMissile> missilePool;
 
-    public float cooldown = 1f;
-    private float cooldown_current;
-
-    private void Awake()
+    private void Start()
     {
         enemies = new HashSet<Unit>();
 
+        // 주인이 없어진 미사일을 다른 주인에게 양도하는 작업 필요!
         missilePool = new List<TowerMissile>(maxMissilePool);
         for (int i = 0; i < maxMissilePool; i++)
         {
@@ -47,28 +45,48 @@ public class TowerAttacker : MonoBehaviour
 
     private void Update()
     {
-        if (cooldown_current <= 0f)
+        if (owner is PlayerUnit)
         {
+            if (PlayerController.Instance.IsCasting) return;
+        }
+
+        if (owner.currentAttackCooldown <= 0f)
+        {
+            float shorestDist = float.MaxValue;
+            Unit target = null;
             foreach (var enemy in enemies)
             {
-                if (!enemy.Dead)
+                if (!enemy.Dead && !enemy.PredictDead)
                 {
-                    for (int i = 0; i < missilePool.Count; i++)
+                    float newDist = Mathf.Abs(enemy.transform.position.x - transform.position.x) + Mathf.Abs(enemy.transform.position.y - transform.position.y);
+                    if (newDist < shorestDist)
                     {
-                        if (!missilePool[i].isUsing)
-                        {
-                            missilePool[i].Use(enemy);
-                            cooldown_current = cooldown;
-                            break;
-                        }
+                        shorestDist = newDist;
+                        target = enemy;
                     }
-                    break;
+                    if (shorestDist <= 0.5f)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (target != null)
+            {
+                for (int i = 0; i < missilePool.Count; i++)
+                {
+                    if (!missilePool[i].isUsing)
+                    {
+                        missilePool[i].Use(target);
+                        owner.currentAttackCooldown = owner.attackSpeed;
+                        break;
+                    }
                 }
             }
         }
         else
         {
-            cooldown_current += -1f * Time.deltaTime;
+            owner.currentAttackCooldown += -1f * Time.deltaTime;
         }
     }
 }

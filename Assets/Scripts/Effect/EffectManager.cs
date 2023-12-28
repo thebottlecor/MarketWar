@@ -5,19 +5,27 @@ using UnityEngine;
 public class EffectManager : Singleton<EffectManager>
 {
 
+    // 이펙트 라이브러리
     public GameObject attackEffectSource;
-    public int maxEffect = 10;
     public List<Effect> attackEffectPool;
 
+    public GameObject repairEffectSource;
+    public List<Effect> repairEffectPool;
 
     private void Start()
     {
-        attackEffectPool = new List<Effect>(maxEffect);
-        for (int i = 0; i < maxEffect; i++)
+        CreateEffectPool(ref attackEffectPool, 10, attackEffectSource);
+        CreateEffectPool(ref repairEffectPool, 2, repairEffectSource);
+    }
+
+    private void CreateEffectPool(ref List<Effect> pool, int max, GameObject source)
+    {
+        pool = new List<Effect>(max);
+        for (int i = 0; i < max; i++)
         {
-            var obj = Instantiate(attackEffectSource, Vector3.zero, Quaternion.identity, transform);
+            var obj = Instantiate(source, Vector3.zero, Quaternion.identity, transform);
             Effect effect = obj.GetComponent<Effect>();
-            attackEffectPool.Add(effect);
+            pool.Add(effect);
         }
     }
 
@@ -27,15 +35,23 @@ public class EffectManager : Singleton<EffectManager>
         switch (idx)
         {
             case 1:
-                for (int i = 0; i < attackEffectPool.Count; i++)
-                {
-                    if (!attackEffectPool[i].gameObject.activeSelf)
-                    {
-                        attackEffectPool[i].EffectInit(pos);
-                        break;
-                    }
-                }
+                SetEffect(pos, attackEffectPool);
                 break;
+            case 2:
+                SetEffect(pos, repairEffectPool);
+                break;
+        }
+    }
+
+    private void SetEffect(Vector3 pos, List<Effect> pool)
+    {
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if (!pool[i].gameObject.activeSelf)
+            {
+                pool[i].EffectInit(pos);
+                break;
+            }
         }
     }
 }

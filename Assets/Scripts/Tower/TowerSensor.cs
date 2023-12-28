@@ -8,11 +8,19 @@ public class TowerSensor : MonoBehaviour
     public Unit owner;
     public TowerAttacker attacker;
 
+    public CircleCollider2D coll;
+    public float baseRadius = 2.4f;
+
+    public void UpgradeAdjust(int upgrade)
+    {
+        coll.radius = baseRadius + (1.5f * upgrade);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Unit unit = collision.GetComponentInParent<Unit>(true);
 
-        if (owner.alliance != unit.alliance)
+        if (unit != null && owner.alliance != unit.alliance)
         {
             attacker.AddEnemy(unit);
         }
@@ -22,7 +30,7 @@ public class TowerSensor : MonoBehaviour
     {
         Unit unit = collision.GetComponentInParent<Unit>(true);
 
-        if (owner.alliance != unit.alliance)
+        if (unit != null && owner.alliance != unit.alliance)
         {
             attacker.RemoveEnemy(unit);
         }

@@ -2,56 +2,104 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : Singleton<EnemyManager>
 {
 
 
     public GameObject enemySource;
-    public int maxEnemy = 10;
+    public int maxEnemy = 100;
     public List<EnemyUnit> enemyPool;
+
+    public GameObject bossSource;
+    public int maxBoss = 1;
+    public List<EnemyUnit> bossPool;
 
     private int currentWave;
 
     public float cooldown = 3f;
     private float cooldown_current;
 
+    public Vector3 startPos = new Vector3(-1000, -1000, 0);
+    public Vector2 playArea = new Vector2(10f, 10f);
+
 
     private void Start()
     {
-        enemyPool = new List<EnemyUnit>(maxEnemy);
-        for (int i = 0; i < maxEnemy; i++)
-        {
-            var obj = Instantiate(enemySource, Vector3.zero, Quaternion.identity, transform);
-            EnemyUnit unit = obj.GetComponent<EnemyUnit>();
-            unit.EnemyInit();
-            enemyPool.Add(unit);
-        }
+        SetEnemyPool(ref enemyPool, maxEnemy, enemySource);
+        SetEnemyPool(ref bossPool, maxBoss, bossSource);
 
         currentWave = 1;
     }
 
-
-    private void Update()
+    private void SetEnemyPool(ref List<EnemyUnit> pool, int max, GameObject source)
     {
-        if (cooldown_current <= 0f)
+        pool = new List<EnemyUnit>(max);
+        for (int i = 0; i < max; i++)
         {
-            int wave = currentWave;
-            cooldown_current = cooldown;
-            for (int i = 0; i < enemyPool.Count; i++)
-            {
-                if (!enemyPool[i].gameObject.activeSelf)
-                {
-                    enemyPool[i].EnemyReset();
-                    wave--;
-                }
-                if (wave <= 0)
-                    break;
-            }
-            currentWave++;
+            var obj = Instantiate(source, startPos, Quaternion.identity, transform);
+            EnemyUnit unit = obj.GetComponent<EnemyUnit>();
+            unit.EnemyInit();
+            pool.Add(unit);
         }
-        else
+    }
+
+
+    //private void Update()
+    //{
+    //    if (cooldown_current <= 0f)
+    //    {
+    //        OldWave();
+    //    }
+    //    else
+    //    {
+    //        cooldown_current += -1f * Time.deltaTime;
+    //    }
+    //}
+
+    //private void OldWave()
+    //{
+    //    int wave = currentWave;
+    //    cooldown_current = cooldown;
+    //    for (int i = 0; i < enemyPool.Count; i++)
+    //    {
+    //        if (!enemyPool[i].gameObject.activeSelf)
+    //        {
+    //            enemyPool[i].EnemyReset();
+    //            wave--;
+    //        }
+    //        if (wave <= 0)
+    //            break;
+    //    }
+    //    currentWave++;
+    //}
+
+    public void NewWave()
+    {
+        int wave = 25;
+        for (int i = 0; i < enemyPool.Count; i++)
         {
-            cooldown_current += -1f * Time.deltaTime;
+            if (!enemyPool[i].gameObject.activeSelf)
+            {
+                enemyPool[i].EnemyReset();
+                wave--;
+            }
+            if (wave <= 0)
+                break;
+        }
+    }
+
+    public void BossWave()
+    {
+        int wave = 1;
+        for (int i = 0; i < bossPool.Count; i++)
+        {
+            if (!bossPool[i].gameObject.activeSelf)
+            {
+                bossPool[i].EnemyReset();
+                wave--;
+            }
+            if (wave <= 0)
+                break;
         }
     }
 
