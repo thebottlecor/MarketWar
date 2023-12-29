@@ -46,6 +46,8 @@ public class PlayerController : Singleton<PlayerController>
                 dir.x = 1f;
             }
 
+            dir.Normalize();
+
             if (Input.GetKey(KeyCode.Z))
             {
                 if (skillButtonEvent != null)
