@@ -71,36 +71,37 @@ public class EnemyUnit : Unit
         }
 
         Unit player = PlayerController.Instance.player;
-        Vector3 playerPos = player.transform.position;
-        float playerDist = Mathf.Abs(playerPos.x - transform.position.x) + Mathf.Abs(playerPos.y - transform.position.y);
-        if (playerDist < 1f)
-        {
-            target = player;
-        }
-        else if (target == player)
-        {
-            target = null;
-        }
+        target = player;
+        //Vector3 playerPos = player.transform.position;
+        //float playerDist = Mathf.Abs(playerPos.x - transform.position.x) + Mathf.Abs(playerPos.y - transform.position.y);
+        //if (playerDist < 1f)
+        //{
+        //    target = player;
+        //}
+        //else if (target == player)
+        //{
+        //    target = null;
+        //}
 
         if (target == null || !target.gameObject.activeSelf)
         {
             target = null;
-            var towers = BuildingManager.Instance.towers;
-            float shortestDist = float.MaxValue;
-            Unit tempTarget = null;
-            foreach (var tower in towers)
-            {
-                float differ = Mathf.Abs(tower.transform.position.x - transform.position.x) + Mathf.Abs(tower.transform.position.y - transform.position.y);
-                if (differ < shortestDist)
-                {
-                    shortestDist = differ;
-                    tempTarget = tower;
-                }
-                if (shortestDist < 1f)
-                    break;
-            }
-            if (tempTarget != null)
-                target = tempTarget;
+            //var towers = BuildingManager.Instance.towers;
+            //float shortestDist = float.MaxValue;
+            //Unit tempTarget = null;
+            //foreach (var tower in towers)
+            //{
+            //    float differ = Mathf.Abs(tower.transform.position.x - transform.position.x) + Mathf.Abs(tower.transform.position.y - transform.position.y);
+            //    if (differ < shortestDist)
+            //    {
+            //        shortestDist = differ;
+            //        tempTarget = tower;
+            //    }
+            //    if (shortestDist < 1f)
+            //        break;
+            //}
+            //if (tempTarget != null)
+            //    target = tempTarget;
         }
         if (target == null)
         {
